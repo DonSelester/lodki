@@ -1,0 +1,38 @@
+{% extends 'boats/base.html' %}
+{% block title %}Crew contract{% endblock %}
+
+{% block body %}
+{% if user.id == boat.owner_id_id and not hacker %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="container">
+            <h3>Crew contract</h3>
+            {% if recruited %}
+            <p><b>New crew member added successfully!</b></p>
+            {% else %}
+            {% if error_message %}
+            <p><b>{{ error_message }}</b></p>
+            {% endif %}
+            <form class="form-horizontal" name="form1" role="form" action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                {% csrf_token %}
+                {% include 'boats/form_template1.html' %}
+                    <label class="col-sm-2 col-form-label" >{{ cr_contr_form.as_p }}</label>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<h1>Trying to hack??? No way!</h1>
+<!--<img src="http://i0.kym-cdn.com/photos/images/facebook/000/296/441/24a.jpg" width="100%">-->
+{% endif %}
+<script>
+    $('label[for=id_boat], input#id_boat').hide();
+    document.forms['form1']['id_boat'].hidden = true;
+</script>
+{% endblock %}

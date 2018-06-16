@@ -1,0 +1,95 @@
+{% extends 'boats/base.html' %}
+{% block title %}Boat info{% endblock %}
+
+{% block body %}
+{% if boat.owner_id_id == user.id %}
+<div class="container">
+    <div class="row my-2">
+        <div class="col-lg-8 order-lg-2">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" data-target="#details" data-toggle="tab" class="nav-link active">Details</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#income" data-toggle="tab" class="nav-link">Income</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#expenses" data-toggle="tab" class="nav-link">Expenses</a>
+                </li>
+            </ul>
+            <div class="tab-content py-4">
+                <div class="tab-pane active" id="details">
+                   <h5 class="mb-3">{{ boat.name }}</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>Type: {{ boat.type }}</p>
+                            <p>Licence plate: {{ boat.licence_plate }}</p>
+                            <p>Date of registration: {{ boat.date_of_registration }}</p>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <details>
+                                <summary>Price (per day): {{ boat.price }} $</summary>
+                                        Enter new price:
+                                    <div class="col-md-2">
+                                        <input size="15%" class="form" type="text" name="new_price">
+                                        <input type="submit" value="Confirm">
+                                    </div>
+                                </details>
+                            </form>
+                        </div>
+                    </div>
+                    <!--/row-->
+                </div>
+
+                <div class="tab-pane" id="income">
+                    {% for info in infos %}
+                    {% if info.all_time_count %}
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Last Month:</h4>
+                                <p>Total contracts: {{ info.month_count }}</p>
+                                <p>Total income: {{ info.month_sum }} $</p>
+                                <h4>All Time:</h4>
+                                <p>Total contracts: {{ info.all_time_count }}</p>
+                                <p>Total income: {{ info.all_time_sum }} $</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <h3>No incomes</h3>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+                <div class="tab-pane" id="expenses">
+                    {% if crews %}
+                    {% for info in infos %}
+                    <div class="jumbotron">
+                        <div class="row">
+                                <div class="col-md-16">
+                                    <p> Crew members: {{ info.crew_count }}</p>
+                                    <p> Total salary expenses: {{ info.total_salary }} $</p>
+                                    {% if info.repair_exp %}
+                                    <p> Total repair expenses: {{ info.repair_exp }} $</p>
+                                    {% endif %}
+                                </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                        <h3>No expenses</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 order-lg-1 text-center">
+            <img src="{{ boat.boat_photo }}" class="mx-auto img-fluid img-circle d-block" alt="avatar">
+
+        </div>
+    </div>
+</div>
+{% else %}
+<h1>404</h1>
+{% endif %}
+{% endblock %}

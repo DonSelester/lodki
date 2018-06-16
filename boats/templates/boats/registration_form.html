@@ -1,0 +1,18 @@
+{% extends 'boats/base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<br>
+<div class="container-fluid">
+    <div class="row" >
+        <div align="center" class="col-sm-1 col-md-12">
+            <div class="panel panel-default">
+                <a class="nav-link" href="{% url 'boats:register_renter' %}"><input class="btn btn-outline-secondary" type="submit" name="" value="Register as renter"></a>
+                <a class="nav-link" href="{% url 'boats:register_owner' %}"><input class="btn btn-outline-secondary" type="submit" name="" value="Register as owner"></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

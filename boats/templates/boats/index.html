@@ -1,0 +1,80 @@
+{% extends 'boats/base.html' %}
+{% block title %}Boats details{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" style="background: #D8D8D8;">
+            <form action="" method="GET">
+                <br>
+                <details open>
+                    <summary>Sort options</summary><br>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_price" >From cheap to expensive</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_price_desc" >From expensive to cheap</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_names">By names</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_type">By types</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_repair">Never been repaired</label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="by_popular">Most rented yachts</label>
+                    </div><br>
+                    <div class="input-group">
+                        <input class="form-control input-group-lg reg_name" value="0" type="text" name="by_price_low"> _ 
+                        <input class="form-control input-group-lg reg_name" value="99999" type="text" name="by_price_top">
+                    </div><br><!--/form-group-->
+                    <input type="submit" value="Confirm" class="btn btn-outline-secondary">
+                </details>
+            </form>
+        </div>
+        {% if all_boats %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% for boat in all_boats %}
+
+            <div class="card-body">
+                <div class="row">
+                    <div style="height: 120px; width: 200px" class="col-xs-2 col-md-2">
+                        <a href="{% url 'boats:boat_detail' boat.id %}">
+                            <img style="border: 3px solid #000000;" src="{{ boat.boat_photo }}" title="{{ boat.name }}" width="100%" height="100%">
+                        </a>
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <a href="{% url 'boats:boat_detail' boat.id %}"><h4 class="product-name"><span style="color: black">{{ boat.name }}</span></h4></a>
+                        <p>{{ boat.type }}</p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 row">
+                        <div class="col-xs-6 col-md-6 text-right" style="padding-top: 5px">
+                            <h6><strong>{{ boat.price }} <span class="text-muted"> $/day</span></strong></h6>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <a href="{% url 'boats:boat_detail' boat.id %}">
+                                <button type="button" class="btn btn-outline-secondary">
+                                <span class="fa fa-trash">Details</span>
+                            </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+{% endfor %}
+{% else %}
+        </div>
+    </div>
+</div>
+        <h3>You don't have boats</h3>
+{% endif %}
+{% endblock %}

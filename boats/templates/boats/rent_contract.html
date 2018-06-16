@@ -1,0 +1,43 @@
+{% extends 'boats/base.html' %}
+{% block title %}Rent contract{% endblock %}
+
+{% block body %}
+{% if user.id == renter.user_id and not hacker %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="container">
+        <h3>Rent contract</h3>
+            {% if rented %}
+                <p><b>Yacht rented successfully!</b></p>
+            {% else %}
+            {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+            {% endif %}
+
+            <form class="form-horizontal" name="form1" role="form" action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                {% csrf_token %}
+                    <label class="col-sm-5 col-form-label" >{{ rent_form.as_p }}</label>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<h1>Trying to hack??? No way!</h1>
+{% endif %}
+<script>
+    document.getElementById('id_date_begin').placeholder = 'YYYY-MM-DD';
+    document.getElementById('id_date_end').placeholder = 'YYYY-MM-DD';
+    $('label[for=id_boat], input#id_boat').hide();
+    $('label[for=id_renter], input#id_renter').hide();
+    $('label[for=id_total_price], input#id_total_price').hide();
+    document.forms['form1']['id_boat'].hidden = true;
+    document.forms['form1']['id_renter'].hidden = true;
+    document.forms['form1']['id_total_price'].hidden = true;
+</script>
+{% endblock %}

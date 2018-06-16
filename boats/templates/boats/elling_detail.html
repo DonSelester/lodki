@@ -1,0 +1,83 @@
+{% extends 'boats/base.html' %}
+{% block title %}Bay details{% endblock %}
+
+{% block body %}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+    #container {
+  width: 100%;
+  height: 300px;
+  padding: 2%;
+}
+</style>
+<div id="container" >
+    <div class="row">
+        <div class="col-md-4">
+            <img style="width:100%;" src="{{ elling.elling_photo }}">
+        </div>
+        <div class="col-md-4">
+            <h1>{{ elling.name }}</h1>
+            <p>Address: {{ elling.address }}</p>
+            <p>Phone number: {{ elling.phone_number }}</p>
+        </div>
+        {% if user.is_owner %}
+        <div class="col-md-4">
+            <h3>Register repair</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    {% if deal %}
+                        <p><strong>Thank you for using our repair shop!</strong></p>
+                    {% else %}
+                        <form class="form-horizontal" name="form1" role="form" action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ repair_form.as_p }}
+                            <input type="submit" name="" value="Confirm">
+                        </form>
+                    {% endif %}
+        </div>
+        {% endif %}
+    </div><br>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <table border="1px">
+              <tr>
+                <th>Cause of repair</th>
+                <th style="text-align:center;">Price</th>
+                <th style="text-align:center;">Days</th>
+              </tr>
+                {% for price in prices %}
+              <tr>
+                <td> {{ price.cause }} </td>
+                <td style="text-align:center;"> {{ price.price }} $ </td>
+                <td style="text-align:center;">{{ price.days }}</td>
+              </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+</div>
+<script>
+    $('label[for=id_elling], input#id_elling').hide();
+    $('label[for=id_repair_price], input#id_repair_price').hide();
+    document.forms['form1']['id_elling'].hidden = true;
+    document.forms['form1']['id_repair_price'].hidden = true;
+</script>
+{% endblock %}

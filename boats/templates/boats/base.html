@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% load staticfiles %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <style>
+   A {
+    color: black;
+   }
+   A:visited {
+    color: black;
+   }
+   A:active {
+    color: black;
+   }
+   body {
+    background: #F0F8FF;
+   }
+   .navbar-brand{
+    font-family: 'Satisfy', cursive;
+}
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark box-shadow ">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Brand -->
+    <a class="navbar-brand notactive" href="{% url 'boats:index' %}">Yacht club</a>
+
+    <div id="nav-content" class="navbar-collapse collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:index' %}">Yachts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:crew' %}">Crew's</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:elling' %}">Elling's</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'boats:Competitions' %}">Competitions</a>
+                        <a class="dropdown-item" href="{% url 'boats:bay' %}">Bays</a>
+                    </div>
+                </li>
+                {% if user.is_authenticated %}
+                    {% if user.is_owner %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'boats:owner_profile' user.id %}">Logged in as <strong>{{ user.username }} </strong></a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'boats:renter_profile' user.id %}">Logged in as <strong>{{ user.username }} </strong></a>
+                        </li>
+                    {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:logout' %}">Log out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'boats:login' %}">Log in</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+</nav>
+{% block body %}
+{% endblock %}
+</body>
+</html>

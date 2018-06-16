@@ -1,0 +1,30 @@
+{% extends 'boats/base.html' %}
+{% block title %}Competitions{% endblock %}
+{% block body %}
+{% if elling %}
+{% for ell in elling %}
+<div class="card-body">
+    <div class="row">
+        <div style="height: 180px; width: 200px" class="col-xs-2 col-md-2">
+                <img style="border: 3px solid #000000;" src="{{ ell.elling_photo }}" width="100%" height="100%">
+        </div>
+        <div class="col-xs-6 col-md-6">
+            <h4 class="product-name"><span style="color: black">{{ ell.name }}</span></h4><br>
+            <h6><span style="color: black">{{ ell.address }}</span></h6><br>
+        </div>
+        <div class="col-xs-2 col-md-2" style="align:center;">
+            <a href="{% url 'boats:elling_detail' ell.id %}">
+                <button type="button" class="btn btn-outline-secondary">
+                    <span class="fa fa-trash">Details</span>
+                </button>
+            </a>
+        </div>
+    </div>
+    <hr>
+</div>
+
+{% endfor %}
+{% else %}
+        <h3>No ellings</h3>
+{% endif %}
+{% endblock %}

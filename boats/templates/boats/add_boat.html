@@ -1,0 +1,38 @@
+{% extends 'boats/base.html' %}
+{% block title %}Add new boat{% endblock %}
+
+{% block body %}
+{% if wrong %}
+<h1>{{wrong}}</h1>
+{% else %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="container">
+            <h3>Add a New Yacht</h3>
+            {% if added %}
+            <p><b>New yacht added successfully!</b></p>
+            {% else %}
+                {% if error_message %}
+                <p><strong>{{ error_message }}</strong></p>
+                {% endif %}
+                <form class="form-horizontal" name="form1" role="form" action="" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                    {% csrf_token %}
+                        <label class="col-sm-2 col-form-label" >{{ boat_form.as_p }}</label>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+    $('label[for=id_owner_id], input#id_owner_id').hide();
+    $('label[for=id_bay_id], input#id_bay_id').hide();
+    document.forms['form1']['id_owner_id'].hidden = true;
+    document.forms['form1']['id_bay_id'].hidden = true;
+</script>
+{% endblock %}

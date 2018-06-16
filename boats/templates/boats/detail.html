@@ -1,0 +1,212 @@
+{% extends 'boats/base.html' %}
+{% block title %}Yacht profile{% endblock %}
+{% block body %}
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easing-1.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+    #container {
+  width: 100%;
+  height: 300px;
+  padding: 2%;
+}
+</style>
+<div class="container">
+    <div class="row my-2">
+        <div class="col-lg-7 order-lg-2">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" data-target="#about" data-toggle="tab" class="nav-link active">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#contracts" data-toggle="tab" class="nav-link">Contracts</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#crew" data-toggle="tab" class="nav-link">Crew</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#repair" data-toggle="tab" class="nav-link">Repairs</a>
+                </li>
+            </ul>
+            <div class="tab-content py-4">
+                <div class="tab-pane active" id="about">
+                    <h5 class="mb-3">{{ boat.name }}</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><a class="link" href="{% url 'boats:owner_profile' owner.user_id %}">Owner: {{ owner.user.first_name }} {{ owner.user.last_name }}</a></p>
+                            <p>Type: {{ boat.type }}</p>
+                            <p><a href="{% url 'boats:bay_detail' bay.id %}">Bay address: {{ bay.address }}</a></p>
+                            <p>Licence plate: {{ boat.licence_plate }}</p>
+                            <p>Price (per day): {{ boat.price }} $</p>
+                            <p>Date of registration: {{ boat.date_of_registration }}</p>
+                        </div>
+                    </div>
+                    <!--/row-->
+                </div>
+
+                <div class="tab-pane" id="contracts">
+                    {% if contracts %}
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-md-16">
+                                <table border="1px">
+                                    <tr>
+                                        <th>Contract id</th>
+                                        <th style="text-align:center;">Contract cost</th>
+                                        <th style="text-align:center;">Terms of contract</th>
+                                        <th style="text-align:center;">Renter profile</th>
+                                    </tr>
+                                    {% for contract in contracts %}
+                                    <tr>
+                                        <td> {{ contract.id }} </td>
+                                        <td style="text-align:center;"> {{ contract.total_price }} $ </td>
+                                        <td style="text-align:center;">{{ contract.date_begin }} - {{ contract.date_end }}</td>
+                                        <td style="text-align:center;"><a href="{% url 'boats:renter_profile' contract.renter_id %}" class="btn btn-outline-secondary" role="button">Renter profile</a></td>
+                                      </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <h3>No contracts</h3>
+                    {% endif %}
+                </div>
+                <div class="tab-pane" id="crew">
+                    {% if owner.user_id == user.id %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a href="{% url 'boats:crew_contract' boat.id %}"><button type="submit" class="btn btn-outline-secondary">Add crew</button></a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if boat_crews %}
+                    {% for b_c in boat_crews %}
+                    <div class="jumbotron">
+                        {% for crew in crews %}
+                        {% if b_c.crew_id == crew.id %}
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4">
+                                <div class="thumbnail">
+                                    <img style="padding-right:8px;" width="100%" height="100%" src="{{ crew.avatar }}">
+                                    <h3>{{ crew.full_name }}</h3>
+                                    <p>Experience: {{ crew.experience }} years</p>
+                                    <p><a href="{% url 'boats:crew_detail' crew.id %}" class="btn btn-outline-secondary" role="button">Details</a></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-16">
+                                    <p>About</p>
+                                    <p>Post: {{ b_c.post }}</p>
+                                    <p>Salary: {{ b_c.salary }} $</p>
+                                    <p>Date of take the post: {{ b_c.date_take_post }}</p>
+                                    {% if owner.user_id == user.id %}
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <details>
+                                            <summary>Edit</summary>
+                                            <div class="col-md-7">
+                                                <input id="crew_id_id" type="text" name="crew_id_id" value="{{ crew.id }}" hidden>
+                                                New post(required):
+                                                <select name="new_post">
+                                                    <option value="Sailor">Sailor</option>
+                                                    <option value="Lieutenant">Lieutenant</option>
+                                                    <option value="Midshipman">Midshipman</option>
+                                                    <option value="Navigator">Navigator</option>
+                                                    {% if not cap %}
+                                                    <option value="Captain">Captain</option>
+                                                    {% endif %}
+                                                </select>
+                                                <p>Enter new salary:</p>
+                                                <input size="10%" class="form" type="text" name="new_salary">
+                                                <input type="submit" value="Confirm">
+                                                </div>
+                                        </details>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if owner.user_id == user.id %}
+                            <form class="form-horizontal" name="form1" role="form" action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input id="crew_id" type="text" name="crew_id" value="{{ crew.id }}" hidden>
+                                <input value="Dismiss" type="submit" onclick="return confirm('Are you really want dismiss this crew member?')">
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                        <h3>No crew</h3>
+                    {% endif %}
+                </div>
+
+            <div class="tab-pane" id="repair">
+                    {% if owner.user_id == user.id %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a href="{% url 'boats:elling' %}"><button type="submit" class="btn btn-outline-secondary">New repair</button></a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if repairs %}
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-md-16">
+                                <table border="1px">
+                                    <tr>
+                                        <th>Cause of repair</th>
+                                        <th style="text-align:center;">Terms of repair</th>
+                                        <th style="text-align:center;">Repair cost</th>
+                                    </tr>
+                                    {% for repair in repairs %}
+                                    <tr>
+                                        <td> {{ repair.repair_cause_id }} </td>
+                                        <td style="text-align:center;"> {{ repair.date_begin }} - {{ repair.date_end }}</td>
+                                        <td style="text-align:center;">{{ repair.repair_price }} $</td>
+                                      </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <h3>No repairs</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 order-lg-1 text-center">
+            <a class="iframe" href="{{ boat.boat_photo }}"><img src="{{ boat.boat_photo }}" class="mx-auto img-fluid img-circle d-block" alt="avatar"></a>
+            {% if user.is_renter %}
+            <label class="custom-file">
+                <a href="{% url 'boats:rent_contract' user.id boat.id  %}">
+                <input class="custom-file-input">
+                    <button style="width:100%;" type="submit" class="btn btn-outline-secondary">Rent it</button>
+                </a>
+            </label>
+        {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
